@@ -30,17 +30,11 @@
 #include <string.h>
 #include <math.h>
 
-#include <sys/types.h>
 #include <time.h>
 
-#include <GL/gl.h>
 #include <GL/glx.h>
-#include <GL/glxext.h>
 #include <X11/Xatom.h>
 #include <X11/extensions/Xrender.h>
-#include <X11/Xutil.h>
-
-#define USE_CHOOSE_FBCONFIG
 
 static void fatalError(const char *why)
 {
@@ -73,36 +67,6 @@ GLX_DEPTH_SIZE, 16,
 None
 };
 
-static int isExtensionSupported(const char *extList, const char *extension)
-{
- 
-  const char *start;
-  const char *where, *terminator;
- 
-  /* Extension names should not have spaces. */
-  where = strchr(extension, ' ');
-  if ( where || *extension == '\0' )
-    return 0;
- 
-  /* It takes a bit of care to be fool-proof about parsing the
-     OpenGL extensions string. Don't be fooled by sub-strings,
-     etc. */
-  for ( start = extList; ; ) {
-    where = strstr( start, extension );
- 
-    if ( !where )
-      break;
- 
-    terminator = where + strlen( extension );
- 
-    if ( where == start || *(where - 1) == ' ' )
-      if ( *terminator == ' ' || *terminator == '\0' )
-        return 1;
- 
-    start = terminator;
-  }
-  return 0;
-}
 
 static Bool WaitForMapNotify(Display *d, XEvent *e, char *arg)
 {
@@ -264,42 +228,7 @@ static void createTheRenderContext()
 		fatalError("OpenGL not supported by X server\n");
 	}
 
-#if USE_GLX_CREATE_CONTEXT_ATTRIB
-	#define GLX_CONTEXT_MAJOR_VERSION_ARB       0x2091
-	#define GLX_CONTEXT_MINOR_VERSION_ARB       0x2092
-	render_context = NULL;
-	if( isExtensionSupported( glXQueryExtensionsString(Xdisplay, DefaultScreen(Xdisplay)), "GLX_ARB_create_context" ) ) {
-		typedef GLXContext (*glXCreateContextAttribsARBProc)(Display*, GLXFBConfig, GLXContext, Bool, const int*);
-		glXCreateContextAttribsARBProc glXCreateContextAttribsARB = (glXCreateContextAttribsARBProc)glXGetProcAddressARB( (const GLubyte *) "glXCreateContextAttribsARB" );
-		if( glXCreateContextAttribsARB ) {
-			int context_attribs[] =
-			{
-				GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-				GLX_CONTEXT_MINOR_VERSION_ARB, 0,
-				//GLX_CONTEXT_FLAGS_ARB        , GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
-				None
-			};
-
-			int (*oldHandler)(Display*, XErrorEvent*) = XSetErrorHandler(&ctxErrorHandler);
-			
-			render_context = glXCreateContextAttribsARB( Xdisplay, fbconfig, 0, True, context_attribs );
-
-			XSync( Xdisplay, False );
-			XSetErrorHandler( oldHandler );
-
-			fputs("glXCreateContextAttribsARB failed", stderr);
-		} else {
-			fputs("glXCreateContextAttribsARB could not be retrieved", stderr);
-		}
-	} else {
-			fputs("glXCreateContextAttribsARB not supported", stderr);
-	}
-
-	if(!render_context)
 	{
-#else
-	{
-#endif
 		render_context = glXCreateNewContext(Xdisplay, fbconfig, GLX_RGBA_TYPE, 0, True);
 		if (!render_context) {
 			fatalError("Failed to create a GL context\n");
@@ -428,7 +357,7 @@ static void redrawTheWindow()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
-#if 0
+#if 1
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 #endif
@@ -480,8 +409,9 @@ int main(int argc, char *argv[])
 	createTheWindow();
 	createTheRenderContext();
 
+	
 	while (updateTheMessageQueue()) {
-		redrawTheWindow();
+	  redrawTheWindow();
 	}
 
 	return 0;

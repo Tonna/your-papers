@@ -34,7 +34,6 @@
 
 #include <GL/glx.h>
 #include <X11/Xatom.h>
-#include <X11/extensions/Xrender.h>
 
 static void fatalError(const char *why)
 {
@@ -47,7 +46,6 @@ static Atom del_atom;
 static Colormap cmap;
 static Display *Xdisplay;
 static XVisualInfo *visual;
-static XRenderPictFormat *pict_format;
 static GLXFBConfig *fbconfigs, fbconfig;
 static int numfbconfigs;
 static GLXContext render_context;
@@ -116,14 +114,7 @@ static void createTheWindow()
 		if(!visual)
 			continue;
 
-		pict_format = XRenderFindVisualFormat(Xdisplay, visual->visual);
-		if(!pict_format)
-			continue;
-
 		fbconfig = fbconfigs[i];
-		if(pict_format->direct.alphaMask > 0) {
-			break;
-		}
 	}
 
 	if(!fbconfig) {

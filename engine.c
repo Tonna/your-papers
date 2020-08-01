@@ -10,10 +10,10 @@ bool should_continue_logic_loops();
 void setup_bindings();
 
 engine *engine_init(
-        unsigned int w,
-        unsigned int h)
+        unsigned int width,
+        unsigned int height)
 {
-    eng.fps = 80;
+    eng.fps = 10;
     eng.current_frame = 0;
     eng.score = 0;
 
@@ -24,9 +24,9 @@ engine *engine_init(
     SDL_Init(SDL_INIT_VIDEO);
     TTF_Init();
 
-    SDL_CreateWindowAndRenderer(w, h, 0, &eng.window, &eng.renderer);
-    eng.w = w;
-    eng.h = h;
+    SDL_CreateWindowAndRenderer(width, height, 0, &eng.window, &eng.renderer);
+    eng.width = width;
+    eng.height = height;
 
     if(eng.window == NULL) {
         fprintf(
@@ -38,8 +38,8 @@ engine *engine_init(
     setup_textures();
     setup_decals();
 
-    eng.grid_width = w / TILE_DIMENSION;
-    eng.grid_height = (h / TILE_DIMENSION) - STATUS_BAR_HEIGHT;
+    eng.grid_width = width / TILE_DIMENSION;
+    eng.grid_height = (height / TILE_DIMENSION) - STATUS_BAR_HEIGHT;
     eng.occupied_gridpoints = malloc(eng.grid_width * eng.grid_height * sizeof(*eng.occupied_gridpoints));
     memset(eng.occupied_gridpoints, 0, eng.grid_width * eng.grid_height * sizeof(*eng.occupied_gridpoints));
 
@@ -67,7 +67,7 @@ void engine_start()
 	    loop_handler();
 
 	    if (is_state_active(GS_QUIT)) {
-		    return;
+	      engine_destroy();
 	    }
     }
 //    emscripten_set_main_loop(loop_handler, -1, 0);

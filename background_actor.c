@@ -26,7 +26,7 @@ background_actor *background_actor_init(background_actor *bg)
     bg->background_sprite.r[0] = 0;
     bg->background_sprite.r[1] = STATUS_BAR_HEIGHT * TILE_DIMENSION;
 
-    bg->status_bar = eng.textures[STATUS_BAR_TEXTURE]; // SDL_CreateTextureFromSurface(eng.renderer, status_surface);
+    bg->status_bar = eng.textures[STATUS_BAR_TEXTURE];
 
     bg->font = TTF_OpenFont(STATUS_TEXT_FONT, STATUS_TEXT_SIZE);
     background_actor_update_scoreboard(bg);
@@ -36,7 +36,7 @@ background_actor *background_actor_init(background_actor *bg)
 
 background_actor *background_actor_update_scoreboard(background_actor *bg)
 {
-	SDL_Color fg={93,93,93,255};
+	SDL_Color fg={255,3,3,255};
     char msg[201];
     sprintf(msg, "score: %02u", eng.score);
     SDL_Surface *status_text_surface = TTF_RenderText_Blended(bg->font, msg, fg);

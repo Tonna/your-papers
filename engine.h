@@ -15,23 +15,23 @@
 typedef struct engine engine;
 
 typedef enum DIRECTION
-{
+  {
     DIRECTION_N,
     DIRECTION_E,
     DIRECTION_S,
     DIRECTION_W
-} DIRECTION;
+  } DIRECTION;
 
 enum
-{
+  {
     SAND_TEXTURE,
     SPRITES_TEXTURE,
     STATUS_BAR_TEXTURE,
     NUM_TEXTURES
-};
+  };
 
 typedef enum SPRITES_DECALS
-{
+  {
     TAIL_S,
     TAIL_W,
     HEAD_N,
@@ -49,16 +49,16 @@ typedef enum SPRITES_DECALS
     BODY_NE,
     APPLE,
     NUM_SPRITES_DECALS
-} SPRITES_DECALS;
+  } SPRITES_DECALS;
 
 enum {
-    MAX_SNAKE_SEGMENTS = 50,
-    TILE_DIMENSION = 40,
-    STATUS_BAR_HEIGHT = 2, // given in tiles
-    STATUS_TEXT_SIZE = 30
+  MAX_SNAKE_SEGMENTS = 50,
+  TILE_DIMENSION = 40,
+  STATUS_BAR_HEIGHT = 2, // given in tiles
+  STATUS_TEXT_SIZE = 30
 };
 
-#define STATUS_TEXT_FONT "assets/edosz.ttf"
+#define STATUS_TEXT_FONT "assets/liberation-mono.regular.ttf"
 
 #define INITIAL_SNAKE_SECONDS_PER_UPDATE 0.2
 #define MINIMUM_SNAKE_SECONDS_PER_UPDATE 0.005
@@ -70,40 +70,40 @@ enum {
 
 struct engine 
 {
-    unsigned int fps;
-    unsigned int current_frame;
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    unsigned int w;
-    unsigned int h;
+  unsigned int fps;
+  unsigned int current_frame;
+  SDL_Window *window;
+  SDL_Renderer *renderer;
+  unsigned int width;
+  unsigned int height;
 
-    Uint32 start_time;
-    bool should_start_logic_loop;
-    unsigned int whole_frames_to_do;
+  Uint32 start_time;
+  bool should_start_logic_loop;
+  unsigned int whole_frames_to_do;
 
-    actor_list *render_list;
-    actor_list *logic_list;
+  actor_list *render_list;
+  actor_list *logic_list;
 
-    SDL_Texture *textures[NUM_TEXTURES];
-    decal sprites_decals[NUM_SPRITES_DECALS];
-    decal sand_decal;
+  SDL_Texture *textures[NUM_TEXTURES];
+  decal sprites_decals[NUM_SPRITES_DECALS];
+  decal sand_decal;
 
-    apple_actor apple_actor;
-    background_actor background_actor;
-    // status_bar_actor status_bar_actor;
-    snake_actor snake_actor;
+  apple_actor apple_actor;
+  background_actor background_actor;
+  // status_bar_actor status_bar_actor;
+  snake_actor snake_actor;
 
-    unsigned int score;
-    unsigned int *occupied_gridpoints;
-    int grid_width;
-    int grid_height;
+  unsigned int score;
+  unsigned int *occupied_gridpoints;
+  int grid_width;
+  int grid_height;
 };
 
 engine eng;
 
 engine *engine_init(
-        unsigned int w,
-        unsigned int h);
+		    unsigned int width,
+		    unsigned int height);
 
 void engine_destroy();
 

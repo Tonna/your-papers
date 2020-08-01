@@ -7,7 +7,7 @@ int main()
 {
     engine_init(
              800,
-             600);
+             800);
 
     engine_start();
 }

@@ -1,0 +1,1 @@
+cc -o m main.c engine.c sprite.c decal.c actor.c apple_actor.c snake_actor.c background_actor.c input_processor.c  -lSDL2 -lSDL2_image -lSDL2_ttf
